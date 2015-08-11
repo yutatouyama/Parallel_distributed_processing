@@ -1,0 +1,2 @@
+# Parallel_distributed_processing
+並列分散処理に関するプログラムをあげています
