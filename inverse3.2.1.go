@@ -9,7 +9,7 @@ import (
     rand "math/rand"
 )
 
-const SIZE int = 100
+const SIZE int = 1000
 
 type Matrix struct {
 	data [SIZE][SIZE]float64
@@ -89,14 +89,14 @@ func MatrixInverse(X Matrix, error *int) Matrix {
 	err = 0
 	R = MatrixDuplicate(X)
 	
-	a := make(chan Matrix, 4)
+	a := make(chan *Matrix, runtime.NumCPU())
 	wg.Add(1)
 	go func () {		
 		defer wg.Done()
 		MatrixDecompose(X, &perm, &toggle, &err)
-		a <- R 
+		a <- &R 
 	} ()
-	LUM = <- a
+	LUM = *(<- a)
 	wg.Wait()
 
 	if false {
