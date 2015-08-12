@@ -9,7 +9,7 @@ import (
     rand "math/rand"
 )
 
-const SIZE int = 1000
+const SIZE int = 20
 
 type Matrix struct {
 	data [SIZE][SIZE]float64
@@ -57,7 +57,7 @@ func MatrixCreate() Matrix {
 
 	for i := 0; i < SIZE; i++ {
 		for j := 0; j < SIZE; j++ {
-			X.data[i][j] = float64(rand.Intn(10)) - float64(rand.Intn(50))
+			X.data[i][j] = float64(rand.Intn(10)) - float64(rand.Intn(10))
 		}
 	}
 
@@ -91,12 +91,15 @@ func MatrixInverse(X Matrix, error *int) Matrix {
 	
 	a := make(chan *Matrix, runtime.NumCPU())
 	wg.Add(1)
+	ss := time.Now()
 	go func () {		
 		defer wg.Done()
 		MatrixDecompose(X, &perm, &toggle, &err)
 		a <- &R 
 	} ()
 	LUM = *(<- a)
+	ee := time.Now().Sub(ss)
+	fmt.Println("LU分解に用いた時間",ee)
 	wg.Wait()
 
 	if false {
